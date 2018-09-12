@@ -5,15 +5,10 @@
                 <v-icon>skip_previous</v-icon>
             </v-btn>
 
-            <v-btn icon>
-                <v-icon>play_circle_outline</v-icon>
-            </v-btn>
-
-            <v-progress-linear
-                background-color="grey lighten-4"
-                color="grey"
-                v-model="song_progress"
-            ></v-progress-linear>
+            <audio 
+                controls src="assets/youraudio.mp3" type="audio/mpeg"
+                style="width:100%"
+            ></audio>
 
             <v-btn icon>
                 <v-icon>skip_next</v-icon>
@@ -36,5 +31,40 @@ export default {
 </script>
 
 <style>
+audio__controls {
+  height: 70%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
+  audio__controls__progress {
+    height: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+audio__controls__progress__currentTime, audio__controls__progress__songDuration {
+      width: 3em;
+      font-size: 12px;
+      font-family: Helvetica, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    audio__controls__progress__bar {
+      flex-grow: 1;
+      align-self: center;
+      border-radius: 5px;
+      background: black;
+      height: 5px;
+      position: relative;
+    }
+      audio__controls__progress__percent {
+        position: absolute;
+        height: inherit;
+        border-radius: 5px;
+        content: "";
+        background: white;
+        z-index: 5;
+      }
 </style>

@@ -1,6 +1,8 @@
 <template>
   <v-container>
-    <toolbar></toolbar>
+    <menu-lateral v-model="menu_lateral"></menu-lateral>
+
+    <toolbar @menu="menu_lateral = true"></toolbar>
 
     <v-tabs
       centered
@@ -43,6 +45,7 @@
 </template>
 
 <script>
+import MenuLateral from '@/components/MenuLateral'
 import Toolbar from '@/components/Toolbar'
 import PlayerBottom from '@/components/PlayerBottom'
 import Tracks from '@/components/Tracks'
@@ -51,9 +54,16 @@ export default {
   name: 'Home',
 
   components: {
+    MenuLateral,
     Tracks,
     Toolbar,
     PlayerBottom
+  },
+
+  data() {
+    return {
+      menu_lateral: false
+    }
   }
   
 }
