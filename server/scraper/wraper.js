@@ -6,13 +6,14 @@ module.exports.scan = function(folder) {
     try {
       let scraper_proc = spawn('python',
         [ path.resolve(__dirname, 'python/scraper.py'),
-          path.resolve(__dirname, '..', 'db.sqlite'),
+          path.resolve(__dirname, '..', 'db/db.sqlite'),
           folder.path, folder.search_art ? 'True': 'False'
         ], { stdio: ['ignore', 'pipe', 'pipe'] });
 
       scraper_proc.stdout.on('data', (data) => {
         try {
-          let message = JSON.parse(data.toString());
+          console.log(data)
+          // let message = JSON.parse(data.toString());
         //   app_events.db.emit(message.type, message.elem);
         } catch (e) {
           console.log(e);

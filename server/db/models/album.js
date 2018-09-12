@@ -7,6 +7,6 @@ module.exports = function (sequelize, DataTypes) {
     year: { type: Sequelize.INTEGER(4), field: 'year' },
     art: { type: Sequelize.BOOLEAN, field: 'art' }
   }, {
-    freezeTableName: true // Model tableName will be the same as the model name
+    freezeTableName: true
   });
 };

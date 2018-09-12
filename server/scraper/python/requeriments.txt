@@ -1,4 +1,3 @@
 bs4
 requests
 eyed3
-sqlite3

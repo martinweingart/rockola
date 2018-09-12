@@ -5,6 +5,6 @@ module.exports = function (sequelize, DataTypes) {
     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
     name: { type: Sequelize.STRING, field: 'name' }
   }, {
-    freezeTableName: true // Model tableName will be the same as the model name
+    freezeTableName: true
   });
 };
