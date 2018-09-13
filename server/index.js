@@ -6,7 +6,6 @@ const express = require('express');
 const config = require('./config');
 const rest_router = require('./rest/router');
 const file_router = require('./files/router');
-// const app_events = require('./custom-events/app-events');
 const db = require('./db');
 
 const app = express();

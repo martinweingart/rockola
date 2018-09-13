@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "api": "node_modules/nodemon/bin/nodemon.js server/index.js"
+    "api": "node_modules/nodemon/bin/nodemon.js server/index.js",
+    "init": "node server/tasks/init.js"
   },
   "dependencies": {
     "axios": "^0.18.0",

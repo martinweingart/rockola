@@ -2,6 +2,14 @@
   <v-container style="height:100%">
     <menu-lateral v-model="menu_lateral"></menu-lateral>
 
+    <v-dialog
+      v-model="show_queue"
+      width="50%"
+      scrollable
+    >
+      <queue @close="show_queue = false"></queue>        
+    </v-dialog>   
+
     <toolbar @menu="menu_lateral = true" id="header"></toolbar>
 
     <v-tabs
@@ -26,24 +34,32 @@
         <v-icon>album</v-icon>
       </v-tab>
 
-      <v-tab href="#tab-genres" title="Tags">
+      <!-- <v-tab href="#tab-genres" title="Tags">
         <v-icon>style</v-icon>
-      </v-tab>      
+      </v-tab>       -->
     </v-tabs>
 
     <v-tabs-items v-model="tab" id="content">
       <v-tab-item id="tab-tracks">
-        <v-card flat>
-          <tracks></tracks> 
-        </v-card>
+          <tracks
+            v-if="tab == 'tab-tracks'"
+          ></tracks> 
       </v-tab-item>
 
       <v-tab-item id="tab-albums" style="overflow:auto">
-        <album-list></album-list>
+        <album-list
+          v-if="tab == 'tab-albums'"
+        ></album-list>
+      </v-tab-item>
+
+      <v-tab-item id="tab-artists" style="overflow:auto">
+        <artist-list
+          v-if="tab == 'tab-artists'"
+        ></artist-list>
       </v-tab-item>
     </v-tabs-items>    
 
-    <player-bottom id="footer"></player-bottom>
+    <player-bottom id="footer" @openQueue="show_queue = true"></player-bottom>
 
   </v-container>
 </template>
@@ -52,8 +68,10 @@
 import MenuLateral from '@/components/MenuLateral'
 import Toolbar from '@/components/Toolbar'
 import PlayerBottom from '@/components/PlayerBottom'
-import Tracks from '@/components/Tracks'
+import Tracks from '@/components/tracks/Tracks'
 import AlbumList from '@/components/albums/AlbumList'
+import ArtistList from '@/components/artists/ArtistList'
+import Queue from '@/components/tracks/Queue'
 
 export default {
   name: 'Home',
@@ -63,13 +81,16 @@ export default {
     Tracks,
     Toolbar,
     PlayerBottom,
-    AlbumList
+    AlbumList,
+    ArtistList,
+    Queue
   },
 
   data() {
     return {
       menu_lateral: false,
-      tab: 'tab-tracks'
+      tab: 'tab-tracks',
+      show_queue: false
     }
   }
   
@@ -85,7 +106,7 @@ export default {
 }
 
 #content {
-  max-height: 70%;
+  max-height: 75%;
   overflow:auto;
 }
 

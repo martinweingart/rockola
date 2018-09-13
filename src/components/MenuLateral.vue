@@ -26,7 +26,17 @@
           </v-list-tile-action>
 
           <v-list-tile-content>
-            <v-list-tile-title>Configuración</v-list-tile-title>
+            <v-list-tile-title>Cola de Reproducción</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>        
+
+        <v-list-tile>
+          <v-list-tile-action>
+            <v-icon>settings</v-icon>
+          </v-list-tile-action>
+
+          <v-list-tile-content>
+            <v-list-tile-title>Listas de Reproducción</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>

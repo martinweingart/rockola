@@ -63,16 +63,16 @@ def scan(db_path, folder_path, search_art):
     cursor = conn.cursor()
 
     # INICIO SUBRUTINAS
-    def saveSong(folder, artist, album, song):
-        cursor.execute('SELECT id FROM song WHERE artistId=(?) AND albumId=(?) AND name=(?)', (artist['id'], album, song['name'],))
+    def saveTrack(artist, album, track):
+        cursor.execute('SELECT id FROM track WHERE artistId=(?) AND albumId=(?) AND name=(?)', (artist['id'], album, track['name'],))
         check = cursor.fetchone()
         if check is None:
             query = """
                 INSERT INTO
-                    {table} (name, track, uri, size, duration, albumId, artistId, folderId, createdAt, updatedAt)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """.format(table='song')
-            cursor.execute(query, (song['name'], song['track'], song['uri'], song['size'], song['duration'], album, artist['id'], folder, datetime.datetime.now(), datetime.datetime.now()))
+                    {table} (name, track, uri, size, duration, albumId, artistId, createdAt, updatedAt)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """.format(table='track')
+            cursor.execute(query, (track['name'], track['track'], track['uri'], track['size'], track['duration'], album, artist['id'], datetime.datetime.now(), datetime.datetime.now()))
             return cursor.lastrowid
         else:
             return check[0]
@@ -124,13 +124,13 @@ def scan(db_path, folder_path, search_art):
             sys.stdout.flush()
             return { 'id': id_inserted, 'name': artist }
 
-    def process(file, folder, commit):
+    def process(file, commit):
         tag_data = eyed3.core.load(file)
         saved_artist = saveArtist(tag_data.tag.artist)
         album_name = tag_data.tag.album if (tag_data.tag.album is not None) else 'Album Desconocido'
         album = {'name': album_name, 'year': int(tag_data.tag.best_release_date.year) if tag_data.tag.best_release_date is not None else 0}
         id_album = saveAlbum(saved_artist, album)
-        song = {
+        track = {
             'name': unicode(tag_data.tag.title),
             'track': tag_data.tag.track_num[0],
             'uri': unicode(str(file)),
@@ -138,47 +138,20 @@ def scan(db_path, folder_path, search_art):
             'duration': tag_data.info.time_secs,
             'license': ''
         }
-        saveSong(folder, saved_artist, id_album, song)
+
+        saveTrack(saved_artist, id_album, track)
+
         if commit:
             conn.commit()
-
-    def saveFolder():
-        cursor.execute('SELECT id FROM folder WHERE path=(?)', (unicode(folder_path),))
-        check = cursor.fetchone()
-        if check is None:
-            query = """
-                INSERT INTO
-                    {table} (path, search_art, scanned, last_scan, scan_finished, createdAt, updatedAt)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            """.format(table='folder')
-            cursor.execute(query, (unicode(folder_path), search_art, 0, '', 0, datetime.datetime.now(), datetime.datetime.now(), ))
-            return cursor.lastrowid
-        else:
-            return check[0]
-
-    # FIN SUBRUTINAS
-
-    # PROCESO PRINCIPAL
-
-    # GUARDO NUEVA CARPETA Y/O ACTUALIZO LA MISMA
-    id_folder = saveFolder()
-    query = """
-        UPDATE
-            folder SET scanned=1, last_scan=?, scan_finished=0, updatedAt=?, search_art=?
-            WHERE id=?
-        """
-    cursor.execute(query, (datetime.datetime.now(), datetime.datetime.now(), search_art, id_folder))
-    conn.commit()
 
     #RECORRO EL DIRECTORIO Y PROCESO CADA ARCHIVO DE AUDIO MP3
     for root, dirs, files in os.walk(folder_path, topdown=False):
         count_processed = 0
         for name in files:
             if isMP3(name):
-                process(os.path.join(root, name), id_folder, (count_processed % 50 == 0))
+                process(os.path.join(root, name), (count_processed % 50 == 0))
                 count_processed = count_processed + 1
 
-    cursor.execute('UPDATE folder SET scan_finished=1 WHERE id=?', (id_folder,))
     conn.commit()
     conn.close()
 
