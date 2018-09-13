@@ -4,13 +4,17 @@
 
     <v-dialog
       v-model="show_queue"
-      width="50%"
+      width="90%"
       scrollable
     >
       <queue @close="show_queue = false"></queue>        
     </v-dialog>   
 
-    <toolbar @menu="menu_lateral = true" id="header"></toolbar>
+    <toolbar 
+      id="header"
+      v-model="filter"
+      @menu="menu_lateral = true" 
+    ></toolbar>
 
     <v-tabs
       centered
@@ -43,18 +47,21 @@
       <v-tab-item id="tab-tracks">
           <tracks
             v-if="tab == 'tab-tracks'"
+            :filter="filter"
           ></tracks> 
       </v-tab-item>
 
       <v-tab-item id="tab-albums" style="overflow:auto">
         <album-list
           v-if="tab == 'tab-albums'"
+          :filter="filter"
         ></album-list>
       </v-tab-item>
 
       <v-tab-item id="tab-artists" style="overflow:auto">
         <artist-list
           v-if="tab == 'tab-artists'"
+          :filter="filter"
         ></artist-list>
       </v-tab-item>
     </v-tabs-items>    
@@ -90,10 +97,11 @@ export default {
     return {
       menu_lateral: false,
       tab: 'tab-tracks',
-      show_queue: false
+      show_queue: false,
+      filter: '',
+      debouncedFilter: null
     }
-  }
-  
+  }  
 }
 </script>
 
@@ -106,7 +114,7 @@ export default {
 }
 
 #content {
-  max-height: 75%;
+  max-height: 73%;
   overflow:auto;
 }
 

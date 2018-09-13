@@ -40,12 +40,23 @@ import player from '@/services/player'
 export default {
     name: 'ArtistList',
 
+    props: {
+        filter: String
+    },    
+
     data() {
         return {
             artists: [],
             offset: 0
         }
     },
+
+    watch: {
+        filter: function() {
+            this.offset = 0;
+            this.update();
+        }
+    },    
 
     created: function() {
         this.update();
@@ -65,9 +76,12 @@ export default {
     methods: {
         update: function() {
             let url = `/artists?limit=20&offset=${this.offset}`;
+            if (this.filter) url+= `&q=${this.filter}`;
+
             api.get(url)
             .then(r => {
-                this.artists = this.artists.concat(r.data);
+                if (this.offset === 0) this.artists = r.data;
+                else this.artists = this.artists.concat(r.data);
             })
         },
 

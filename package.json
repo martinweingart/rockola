@@ -15,6 +15,7 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "jwt-simple": "^0.5.1",
+    "lodash": "^4.17.11",
     "musicmetadata": "^2.0.5",
     "sequelize": "^4.38.1",
     "sqlite3": "^4.0.2",

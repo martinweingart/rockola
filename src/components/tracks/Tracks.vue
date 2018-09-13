@@ -6,14 +6,14 @@
             :key="i"
             avatar
         >
-            <v-list-tile-action>
-                <v-btn icon ripple @click="play(track)">
+            <v-list-tile-action style="min-width:40px">
+                <v-btn small icon ripple @click="play(track)" class="ma-0 pa-0">
                     <v-icon>play_circle_filled</v-icon>
                 </v-btn>               
             </v-list-tile-action>
 
-            <v-list-tile-action>
-                <v-btn icon small @click="add(track)">
+            <v-list-tile-action style="min-width:40px">
+                <v-btn icon small ripple @click="add(track)" class="ma-0 pa-0">
                     <v-icon>playlist_add</v-icon>
                 </v-btn>               
             </v-list-tile-action>
@@ -24,8 +24,8 @@
             </v-list-tile-content>
 
             <v-list-tile-action>
-                <v-btn icon ripple>
-                    <v-icon>more_vert</v-icon>
+                <v-btn icon ripple @click="download(track.id)">
+                    <v-icon>cloud_download</v-icon>
                 </v-btn>
             </v-list-tile-action>
         </v-list-tile>
@@ -41,10 +41,21 @@ import player from '@/services/player'
 export default {
     name: 'Tracks',
 
+    props: {
+        filter: String
+    },
+
     data() {
         return {
             offset: 0,
             tracks: []
+        }
+    },
+
+    watch: {
+        filter: function() {
+            this.offset = 0;
+            this.update();
         }
     },
 
@@ -64,11 +75,14 @@ export default {
     },
 
     methods: {
-        update: function(offset) {
+        update: function() {
             let url = `/tracks?limit=20&offset=${this.offset}`;
+            if (this.filter) url+= `&q=${this.filter}`;
+
             api.get(url)
             .then(r => {
-                this.tracks = this.tracks.concat(r.data);
+                if (this.offset === 0) this.tracks = r.data;
+                else this.tracks = this.tracks.concat(r.data);
             })
         },
 
@@ -82,6 +96,10 @@ export default {
         add: function(track) {
             track.src= getTrackUrl(track.id);
             this.$store.commit('queue_add', track);
+        },
+
+        download: function(id) {
+           window.open(getTrackUrl(id));
         }
     }
 

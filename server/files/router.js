@@ -11,11 +11,12 @@ router.get('/tracks/:id', function(req, res) {
     .then(track => {
       // if (track) res.sendFile(track.uri);
       // else return_types.not_found(res);
-      var stream = fs.createReadStream(track.uri)
+      fs.createReadStream(track.uri)
       .on('end', function () {
-          console.log('Stream Done');
+          console.log('Track streaming done!');
       })
       .on("error", function (err) {
+          console.error(err);
           res.end(err);
       })
       .pipe(res, { end: true });

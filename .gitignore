@@ -21,4 +21,4 @@ yarn-error.log*
 *.sw*
 
 server/config.js
-server/db.sqlite
+server/db/db.sqlite

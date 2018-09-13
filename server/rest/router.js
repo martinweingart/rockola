@@ -12,8 +12,8 @@ router.use(function (req, res, next) {
   for(let key in req.query) {
     if (key === 'offset') params.offset = req.query.offset;
     else if (key === 'limit') params.limit = req.query.limit;
-    else if (key === 'search') params.where.name = { $like: `%${req.query[key]}%` };
-    else params.where[key] = req.query[key];
+    // else if (key === 'q') params.where.name = { $like: `%${req.query[key]}%` };
+    // else params.where[key] = req.query[key];
   }
   req.sql = params;
   next();

@@ -1,4 +1,4 @@
 export default {
-    api: 'http://localhost:3800/rest',
-    files: 'http://localhost:3800/files'
+    api: 'http://192.168.0.77:3800/rest',
+    files: 'http://192.168.0.77:3800/files'
 }

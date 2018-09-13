@@ -10,6 +10,9 @@ router.get('/', function(req, res) {
         as: 'albums'
     }];
 
+    if (req.query.q)
+        req.sql.where.name = { $like: `%${req.query.q}%` };
+
     db.Artist.findAll(req.sql)
     .then(arts => {
         return_types.ok(res, arts);

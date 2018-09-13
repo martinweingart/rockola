@@ -9,6 +9,7 @@ router.get('/', function(req, res) {
       [db.Album, 'name', 'ASC'],
       ['track', 'ASC']
     ];
+    
     req.sql.include = [{
       model: db.Album,
       attributes: [ 'name' ],
@@ -18,6 +19,16 @@ router.get('/', function(req, res) {
       attributes: [ 'name' ],
       as: 'artist'
     }];
+
+    if (req.query.q) {
+      req.sql.where = {
+        $or: [
+          { name: { $like: `%${req.query.q}%` } },
+          db.sequelize.where(db.sequelize.col('album.name'), 'like', `%${req.query.q}%`),
+          db.sequelize.where(db.sequelize.col('artist.name'), 'like', `%${req.query.q}%`)
+        ]
+      }
+    }    
   
     db.Track.findAll(req.sql)
     .then(tracks => return_types.ok(res, tracks))

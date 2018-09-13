@@ -96,7 +96,7 @@ def scan(db_path, folder_path, search_art):
             id_artist = artist['id']
             cursor.execute(query, (name, year, art, id_artist, datetime.datetime.now(), datetime.datetime.now()))
             id_inserted = cursor.lastrowid
-            print '{{ "type": "new-album", "elem": {{ "id": {}, "name": "{}", "year": {}, "art": {}, "artistId":{} }}  }}'.format(id_inserted, name, year, 'true' if art else 'false', id_artist)
+            # print '{{ "type": "new-album", "elem": {{ "id": {}, "name": "{}", "year": {}, "art": {}, "artistId":{} }}  }}'.format(id_inserted, name, year, 'true' if art else 'false', id_artist)
             sys.stdout.flush()
             return id_inserted
         else:
@@ -120,7 +120,7 @@ def scan(db_path, folder_path, search_art):
             """.format(table='artist')
             cursor.execute(query, (artist, datetime.datetime.now(), datetime.datetime.now()))
             id_inserted = cursor.lastrowid
-            print '{{ "type": "new-artist", "elem": {{ "id": {}, "name": "{}" }}  }}'.format(id_inserted, artist)
+            # print '{{ "type": "new-artist", "elem": {{ "id": {}, "name": "{}" }}  }}'.format(id_inserted, artist)
             sys.stdout.flush()
             return { 'id': id_inserted, 'name': artist }
 

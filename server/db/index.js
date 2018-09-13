@@ -15,7 +15,7 @@ var sequelize = new Sequelize('database', 'username', 'password', {
   logging: false
 });
 
-module.exports.sequelize;
+module.exports.sequelize = sequelize;
 
 var Artist = sequelize.import(__dirname + "/models/artist");
 var Album = sequelize.import(__dirname + "/models/album");
