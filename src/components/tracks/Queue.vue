@@ -13,7 +13,7 @@
             <v-list-tile
                 :class="$store.state.playing == i ? 'grey lighten-2' : ''"
                 v-for="(track, i) in $store.state.queue"
-                :key="track.id"
+                :key="i"
                 avatar
                 @click=""
             >

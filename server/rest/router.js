@@ -1,8 +1,6 @@
 const express = require('express');
 const body_parser = require('body-parser');
 const router = express.Router();
-const config = require('../config');
-const scraper = require('../scraper');
 const return_types = require('../return_types');
 
 router.use(body_parser.json());
@@ -23,10 +21,5 @@ router.use('/artists', require('./artists'));
 router.use('/albums', require('./albums'));
 router.use('/tracks', require('./tracks'));
 router.use('/users', require('./users'));
-
-router.post('/scan', function(req, res) {
-  scraper.scan(config.folders[0]);
-  return_types.ok(res, { msg: "Scanning started" });
-});
 
 module.exports = router;

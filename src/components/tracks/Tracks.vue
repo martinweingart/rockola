@@ -1,6 +1,6 @@
 <template>
 <v-container ref="container">
-    <v-list two-line subheader dense>
+    <v-list two-line subheader dense style="background:#ECEFF1">
         <v-list-tile
             v-for="(track,i) in tracks"
             :key="i"
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { getTrackUrl } from '@/utils'
+import { getTrackUrl, download } from '@/utils'
 import api from '@/services/api'
 import player from '@/services/player'
 
@@ -99,7 +99,7 @@ export default {
         },
 
         download: function(id) {
-           window.open(getTrackUrl(id));
+           download(getTrackUrl(id) + '/download');
         }
     }
 

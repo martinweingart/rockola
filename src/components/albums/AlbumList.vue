@@ -29,8 +29,8 @@
 
                 <v-spacer></v-spacer>
 
-                <v-btn icon small>
-                    <v-icon>more_vert</v-icon>
+                <v-btn icon small @click="download(album.id)">
+                    <v-icon>cloud_download</v-icon>
                 </v-btn>                
               </v-card-actions>
             </v-card>
@@ -40,7 +40,8 @@
 </template>
 
 <script>
-import { getTrackUrl } from '@/utils'
+import config from '@/config'
+import { getTrackUrl, download } from '@/utils'
 import api from '@/services/api'
 import player from '@/services/player'
 
@@ -114,7 +115,11 @@ export default {
                     this.$store.commit('queue_add', track);
                 }
             })
-        }
+        },
+
+        download: function(id) {
+           download(`${config.files}/albums/${id}/download`);
+        }        
     }
 
 }

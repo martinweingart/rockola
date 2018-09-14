@@ -1,11 +1,12 @@
 <template>
-  <div id="app" style="height:100%">
+  <v-app style="height:100%">
     <router-view/>
-  </div>
+  </v-app>
 </template>
 
 <style>
 html, body {
   height: 100%;
 }
+
 </style>

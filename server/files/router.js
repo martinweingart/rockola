@@ -4,14 +4,46 @@ const express = require('express');
 const router = express.Router();
 const return_types = require('../return_types');
 const db = require('../db');
+const archiver = require('archiver');
+const contentDisposition = require('content-disposition')
 
+
+router.get('/tracks/download', function(req, res) {
+  db.Track.findAll({
+    where: { id: { $in: req.query.track } }
+  })
+  .then(tracks => {
+    if (tracks.length > 0) {
+      res.writeHead(200, {
+        "Content-Type": "application/zip",
+        "Content-Disposition": contentDisposition('Rockola Playlist.zip')
+      });
+
+      let archive = archiver('zip', {
+        zlib: { level: 9 }
+      });
+
+      for(let track of tracks) {
+        archive.file(track.uri, { name: `${track.track} - ${track.name}.mp3` });
+      }
+      
+      archive.finalize();
+      archive.pipe(res, { end: true });
+
+    }
+    else return_types.not_found(res);
+  })
+  .catch(error => {
+    console.log(error);
+    return_types.internal_error(res);
+  });
+});
 
 router.get('/tracks/:id', function(req, res) {
   db.Track.findOne({ where: { id: req.params.id } })
     .then(track => {
-      // if (track) res.sendFile(track.uri);
-      // else return_types.not_found(res);
-      fs.createReadStream(track.uri)
+      res.sendFile(track.uri)
+      /* fs.createReadStream(track.uri)
       .on('end', function () {
           console.log('Track streaming done!');
       })
@@ -19,7 +51,7 @@ router.get('/tracks/:id', function(req, res) {
           console.error(err);
           res.end(err);
       })
-      .pipe(res, { end: true });
+      .pipe(res, { end: true }); */
     })
     .catch(error => {
       console.log(error);
@@ -31,11 +63,7 @@ router.get('/tracks/:id/download', function(req, res) {
   db.Track.findOne({ where: { id: req.params.id } })
     .then(track => {
       if (track) {
-        let headers = {
-          'Content-disposition': `attachment; filename="${track.name}.mp3"`,
-          'Content-type': 'audio/mpeg'
-        };
-        res.sendFile(track.uri, {headers: headers});
+        res.download(track.uri, `${track.name}.mp3`);
       }
       else return_types.not_found(res);
     })
@@ -44,6 +72,44 @@ router.get('/tracks/:id/download', function(req, res) {
       return_types.internal_error(res);
     });
 });
+
+
+router.get('/albums/:id/download', function(req, res) {
+  db.Album.findOne({
+    where: { id: req.params.id },
+    include: [{
+        model: db.Track,
+        as: 'tracks'
+    }]
+  })
+  .then(album => {
+    if (album) {
+      res.writeHead(200, {
+        "Content-Type": "application/zip",
+        "Content-Disposition": contentDisposition(`(${album.year}) ${album.name}.zip`)
+      });
+
+      let archive = archiver('zip', {
+        zlib: { level: 9 }
+      });
+
+      for(let track of album.tracks) {
+        archive.file(track.uri, { name: `${track.track} - ${track.name}.mp3` });
+      }
+      
+      archive.finalize();
+      archive.pipe(res, { end: true });
+
+    }
+    else return_types.not_found(res);
+  })
+  .catch(error => {
+    console.log(error);
+    return_types.internal_error(res);
+  });
+});
+
+
 
 router.get('/album-art/:id', function(req, res) {
   db.Album.findOne({ where: { id: req.params.id } })

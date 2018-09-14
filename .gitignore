@@ -20,5 +20,7 @@ yarn-error.log*
 *.sln
 *.sw*
 
+src/config.js
+
 server/config.js
 server/db/db.sqlite

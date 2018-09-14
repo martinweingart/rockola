@@ -1,24 +1,41 @@
 <template>
-  <v-container style="height:100%">
-    <menu-lateral v-model="menu_lateral"></menu-lateral>
-
+  <v-container style="height:100%;max-height:100%" class="pa-0">
     <v-dialog
       v-model="show_queue"
       width="90%"
       scrollable
     >
-      <queue @close="show_queue = false"></queue>        
-    </v-dialog>   
+      <queue @close="show_queue = false"></queue>
+    </v-dialog>
 
-    <toolbar 
+    <v-dialog
+      v-model="show_save"
+      scrollable
+    >
+      <v-card>
+        <v-card-text>
+              <v-text-field
+                label="Name"
+                v-model="new_playlist"
+                :rules="[(v) => v.length > 0 ? true : 'Debe ingresar un nombre']"
+              ></v-text-field>      
+
+              <v-btn style="float:right" :disabled="!new_playlist.length" @click="save">
+                Guardar
+                <v-icon>save</v-icon>
+              </v-btn>        
+          </v-card-text>
+      </v-card>
+    </v-dialog>
+
+    <toolbar
       id="header"
       v-model="filter"
-      @menu="menu_lateral = true" 
     ></toolbar>
 
     <v-tabs
       centered
-      color="primary"
+      color="blue-grey darken-4"
       dark
       icons-and-text
       fixed-tabs
@@ -29,7 +46,7 @@
       <v-tab href="#tab-tracks" title="Tracks">
         <v-icon>library_music</v-icon>
       </v-tab>
-      
+
       <v-tab href="#tab-artists" title="Artists">
         <v-icon>people</v-icon>
       </v-tab>
@@ -48,7 +65,7 @@
           <tracks
             v-if="tab == 'tab-tracks'"
             :filter="filter"
-          ></tracks> 
+          ></tracks>
       </v-tab-item>
 
       <v-tab-item id="tab-albums" style="overflow:auto">
@@ -64,15 +81,14 @@
           :filter="filter"
         ></artist-list>
       </v-tab-item>
-    </v-tabs-items>    
+    </v-tabs-items>
 
-    <player-bottom id="footer" @openQueue="show_queue = true"></player-bottom>
+    <player-bottom id="footer" @openQueue="show_queue = true" @save="show_save = true"></player-bottom>
 
   </v-container>
 </template>
 
 <script>
-import MenuLateral from '@/components/MenuLateral'
 import Toolbar from '@/components/Toolbar'
 import PlayerBottom from '@/components/PlayerBottom'
 import Tracks from '@/components/tracks/Tracks'
@@ -84,7 +100,6 @@ export default {
   name: 'Home',
 
   components: {
-    MenuLateral,
     Tracks,
     Toolbar,
     PlayerBottom,
@@ -95,27 +110,45 @@ export default {
 
   data() {
     return {
-      menu_lateral: false,
       tab: 'tab-tracks',
       show_queue: false,
+      show_save: false,
       filter: '',
-      debouncedFilter: null
+      debouncedFilter: null,
+      new_playlist: ''
     }
-  }  
+  },
+
+  created: function() {
+    let playlist = this.$localStorage.get('rockola_playlist');
+    if (playlist) {
+      let playlist_saved = JSON.parse(this.$localStorage.get('rockola_playlist'));
+      this.$store.commit('playlists_set', playlist_saved);
+    }
+  },
+
+  methods: {
+    save: function() {
+      let playlist_saved = JSON.parse(this.$localStorage.get('rockola_playlist')) || [];
+      let playlist = {
+        name: this.new_playlist,
+        tracks: this.$store.state.queue
+      };
+
+      playlist_saved.push(playlist)
+      this.$localStorage.set('rockola_playlist', JSON.stringify(playlist_saved))
+      this.$store.commit('playlists_add', playlist);
+      this.show_save = false;
+    }
+  }
 }
 </script>
 
 <style scoped>
-#header {
-    position: relative;
-    top: 0;
-    left: 0;
-    right: 0;
-}
-
 #content {
-  max-height: 73%;
+  height:80%;   
   overflow:auto;
+  background: #ECEFF1;
 }
 
 #footer {

@@ -6,7 +6,9 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     queue: [],
-    playing: 0
+    playing: 0,
+    playlist: null,
+    playlists: [],
   },
 
   mutations: {
@@ -27,6 +29,11 @@ export default new Vuex.Store({
       state.playing = state.playing - 1;
     },
 
+    queue_set (state, tracks) {
+      state.queue = tracks;
+      state.playing = 0;
+    },
+
     set_playing (state, playing) {
       state.playing = playing;
     },
@@ -34,6 +41,18 @@ export default new Vuex.Store({
     queue_remove (state, index) {
       if (state.playing == index) state.playing++;
       state.queue.splice(index, 1);
+    },
+
+    playlists_set(state, playlists) {
+      state.playlists = playlists;
+    },
+
+    playlists_add (state, playlist) {
+      state.playlists.push(playlist);
+    },
+
+    playlist_set (state, name) {
+      state.playlist = name;
     }
   },
 
