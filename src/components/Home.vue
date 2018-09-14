@@ -146,13 +146,13 @@ export default {
 
 <style scoped>
 #content {
-  height:80%;   
+  height:73%;   
   overflow:auto;
   background: #ECEFF1;
 }
 
 #footer {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;

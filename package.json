@@ -7,16 +7,17 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "api": "node_modules/nodemon/bin/nodemon.js server/index.js",
-    "init": "node server/tasks/init.js"
+    "init": "node server/tasks/init.js",
+    "scan": "node server/tasks/scan.js",
+    "deploy": "sh deploy.sh",
+    "server": "node server/index.js"
   },
   "dependencies": {
     "archiver": "^3.0.0",
     "axios": "^0.18.0",
-    "bcrypt": "^3.0.0",
     "body-parser": "^1.18.3",
     "content-disposition": "^0.5.2",
     "express": "^4.16.3",
-    "jwt-simple": "^0.5.1",
     "lodash": "^4.17.11",
     "musicmetadata": "^2.0.5",
     "sequelize": "^4.38.1",

@@ -126,23 +126,24 @@ def scan(db_path, folder_path, search_art):
 
     def process(file, commit):
         tag_data = eyed3.core.load(file)
-        saved_artist = saveArtist(tag_data.tag.artist)
-        album_name = tag_data.tag.album if (tag_data.tag.album is not None) else 'Album Desconocido'
-        album = {'name': album_name, 'year': int(tag_data.tag.best_release_date.year) if tag_data.tag.best_release_date is not None else 0}
-        id_album = saveAlbum(saved_artist, album)
-        track = {
-            'name': unicode(tag_data.tag.title),
-            'track': tag_data.tag.track_num[0],
-            'uri': unicode(str(file)),
-            'size': tag_data.info.size_bytes,
-            'duration': tag_data.info.time_secs,
-            'license': ''
-        }
+        if tag_data is not None:
+            saved_artist = saveArtist(tag_data.tag.artist)
+            album_name = tag_data.tag.album if (tag_data.tag.album is not None) else 'Album Desconocido'
+            album = {'name': album_name, 'year': int(tag_data.tag.best_release_date.year) if tag_data.tag.best_release_date is not None else 0}
+            id_album = saveAlbum(saved_artist, album)
+            track = {
+                'name': unicode(tag_data.tag.title),
+                'track': tag_data.tag.track_num[0],
+                'uri': unicode(str(file)),
+                'size': tag_data.info.size_bytes,
+                'duration': tag_data.info.time_secs,
+                'license': ''
+            }
 
-        saveTrack(saved_artist, id_album, track)
+            saveTrack(saved_artist, id_album, track)
 
-        if commit:
-            conn.commit()
+            if commit:
+                conn.commit()
 
     #RECORRO EL DIRECTORIO Y PROCESO CADA ARCHIVO DE AUDIO MP3
     for root, dirs, files in os.walk(folder_path, topdown=False):

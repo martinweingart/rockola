@@ -1,69 +1,69 @@
 <template>
 <v-container class="pa-0">
-    <v-layout row style="background: #ECEFF1;">
-            <v-btn icon small @click="$emit('openQueue')" title="Open Queue">
-                <v-icon>open_in_browser</v-icon>
-            </v-btn>
+    <v-layout row style="background: #ECEFF1;" :wrap="$options.isMobile()">
+        <v-btn icon small @click="$emit('openQueue')" title="Open Queue">
+            <v-icon>open_in_browser</v-icon>
+        </v-btn>
 
-            <v-btn icon small @click="playPrev" title="Play Previous">
-                <v-icon>skip_previous</v-icon>
-            </v-btn>
+        <v-btn icon small @click="playPrev" title="Play Previous">
+            <v-icon>skip_previous</v-icon>
+        </v-btn>
 
-            <audio
-                ref="player"
-                controls
-                type="audio/mpeg"
-                style="width:100%"
-            ></audio>
+        <audio
+            ref="player"
+            controls
+            type="audio/mpeg"
+            :style="$options.isMobile() ? 'width:70%' : 'width:100%'"
+        ></audio>
 
-            <v-btn icon small @click="playNext" title="Play Next">
-                <v-icon>skip_next</v-icon>
-            </v-btn>
+        <v-btn icon small @click="playNext" title="Play Next">
+            <v-icon>skip_next</v-icon>
+        </v-btn>
 
-            <v-btn icon small @click="toggleRepeat" title="Repeat">
-                <v-icon :class="!active.repeat && !active.repeat_one ? 'grey--text' : ''">
-                    {{ active.repeat_one ? 'repeat_one' : 'repeat'}}
-                </v-icon>
-            </v-btn>
+        <v-btn icon small @click="toggleRepeat" title="Repeat">
+            <v-icon :class="!active.repeat && !active.repeat_one ? 'grey--text' : ''">
+                {{ active.repeat_one ? 'repeat_one' : 'repeat'}}
+            </v-icon>
+        </v-btn>
 
-            <v-btn icon small @click="toggleShuffle" title="Shuffle">
-                <v-icon :class="!active.shuffle ? 'grey--text' : ''">shuffle</v-icon>
-            </v-btn>
+        <v-btn icon small @click="toggleShuffle" title="Shuffle">
+            <v-icon :class="!active.shuffle ? 'grey--text' : ''">shuffle</v-icon>
+        </v-btn>
 
-            <v-menu offset-y>
-            <v-btn
-                small
-                title="Save List"
-                slot="activator"
-                icon
-            >
-                <v-icon>save</v-icon>
-            </v-btn>
-            <v-list>
-                <v-list-tile v-if="$store.state.playlist" @click="save">
-                    <v-list-tile-title>
-                        Guardar '{{ $store.state.playlist }}''
-                    </v-list-tile-title>
-                </v-list-tile>
+        <v-menu offset-y>
+        <v-btn
+            small
+            title="Save List"
+            slot="activator"
+            icon
+        >
+            <v-icon>save</v-icon>
+        </v-btn>
+        <v-list>
+            <v-list-tile v-if="$store.state.playlist" @click="save">
+                <v-list-tile-title>
+                    Guardar '{{ $store.state.playlist }}''
+                </v-list-tile-title>
+            </v-list-tile>
 
-                <v-list-tile @click="saveAs">
-                    <v-list-tile-title>
-                        Guardar como...
-                    </v-list-tile-title>
-                </v-list-tile>
-            </v-list>
-            </v-menu>            
+            <v-list-tile @click="saveAs">
+                <v-list-tile-title>
+                    Guardar como...
+                </v-list-tile-title>
+            </v-list-tile>
+        </v-list>
+        </v-menu>      
 
-            <v-btn icon small @click="download" title="Download List">
-                <v-icon>cloud_download</v-icon>
-            </v-btn>              
+        <v-btn icon small @click="download" title="Download List">
+            <v-icon>cloud_download</v-icon>
+        </v-btn>              
     </v-layout>
 </v-container>
 </template>
 
 <script>
 import config from '@/config'
-import { download } from '@/utils'
+import { download, isMobile } from '@/utils'
 import player from '@/services/player'
 
 export default {
@@ -78,6 +78,8 @@ export default {
             }
         }
     },
+
+    isMobile: isMobile,
 
     mounted: function() {
         player.init(this.$refs.player);
