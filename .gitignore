@@ -25,4 +25,7 @@ src/config.js
 server/config.js
 server/db/db.sqlite
 server/db/db.sqlite-journal
-server/files/album-art
+server/files/album-art/*
+!server/files/album-art/.gitkeep
+server/files/artist-photo/*
+!server/files/artist-photo/.gitkeep

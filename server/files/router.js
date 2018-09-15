@@ -135,4 +135,16 @@ router.get('/album-art/:id', function(req, res) {
     });
 });
 
+router.get('/artist-photo/:id', function(req, res) {
+  db.Artist.findOne({ where: { id: req.params.id } })
+    .then(artist => {
+      if (artist && artist.photo) res.sendFile(`${__dirname}/artist-photo/${artist.name}.jpg`);
+      else return_types.not_found(res);
+    })
+    .catch(error => {
+      console.log(error);
+      return_types.internal_error(res);
+    });
+});
+
 module.exports = router;

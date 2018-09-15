@@ -4,11 +4,17 @@
             <v-card>
               <v-responsive style="max-height:150px;">
                   <img
+                    v-if="album.art"
+                    style="width:100%"
+                    :src="getAlbumArt(album.id)"
+                    />
+                  <img
+                    v-else
                     style="width:100%"
                     src="@/assets/noalbum.jpeg"
                     />
               </v-responsive>
-              
+
                 <v-card-title class="pa-2 ma-0">
                     <div style="white-space: nowrap;overflow:hidden;text-overflow:ellipsis;">
                         <div style="font-size:70%;">{{ album.name }}</div>
@@ -31,7 +37,7 @@
 
                 <v-btn icon small @click="download(album.id)">
                     <v-icon>cloud_download</v-icon>
-                </v-btn>                
+                </v-btn>
               </v-card-actions>
             </v-card>
         </v-flex>
@@ -50,7 +56,7 @@ export default {
 
     props: {
         filter: String
-    },        
+    },
 
     data() {
         return {
@@ -64,7 +70,7 @@ export default {
             this.offset = 0;
             this.update();
         }
-    },    
+    },
 
     created: function() {
         this.update();
@@ -79,8 +85,8 @@ export default {
                 this.offset += 20;
                 this.update();
             }
-        };        
-    },    
+        };
+    },
 
     methods: {
         update: function() {
@@ -119,7 +125,11 @@ export default {
 
         download: function(id) {
            download(`${config.files}/albums/${id}/download`);
-        }        
+        },
+
+        getAlbumArt: function(id) {
+            return `${config.files}/album-art/${id}`;
+        }
     }
 
 }

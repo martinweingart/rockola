@@ -12,7 +12,12 @@ module.exports = function (sequelize, DataTypes) {
     name: { 
       type: Sequelize.STRING, 
       field: 'name' 
-    }
+    },
+
+    photo: { 
+      type: Sequelize.BOOLEAN, 
+      field: 'photo' 
+    }    
   }, 
 
   {

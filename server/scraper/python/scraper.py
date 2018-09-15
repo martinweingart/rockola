@@ -57,6 +57,22 @@ def downloadArtLastFM(artist, album):
     except Exception:
         return False
 
+def downloadPhotoLastFM(artist):
+    try:
+        url = 'https://www.last.fm/music/%s' % (artist)
+        r = requests.get(url)
+        if r.status_code == 200:
+            soup = BeautifulSoup(r.text, "html.parser")
+            img = soup.find('img', {'class': 'avatar'})
+            url_imagen = img.get('src')
+            file_dir = os.path.dirname(os.path.realpath('__file__'))
+            file_name = artist + '.jpg'
+            file_path = os.path.join(file_dir, 'server/files/artist-photo/' + file_name)
+            download(url_imagen, file_path)
+            return True
+    except Exception:
+        return False
+
 
 def scan(db_path, folder_path, search_art):
     conn = sqlite3.connect(db_path)
@@ -110,12 +126,14 @@ def scan(db_path, folder_path, search_art):
         if check is not None:
             return { 'id': check[0], 'name': check[1] }
         else :
+            photo = downloadPhotoLastFM(artist)
+
             query = """
                 INSERT INTO
-                    {table} (name, createdAt, updatedAt)
-                VALUES (?, ?, ?)
+                    {table} (name, photo, createdAt, updatedAt)
+                VALUES (?, ?, ?, ?)
             """.format(table='artist')
-            cursor.execute(query, (artist, datetime.datetime.now(), datetime.datetime.now()))
+            cursor.execute(query, (artist, photo, datetime.datetime.now(), datetime.datetime.now()))
             id_inserted = cursor.lastrowid
             # print '{{ "type": "new-artist", "elem": {{ "id": {}, "name": "{}" }}  }}'.format(id_inserted, artist)
             sys.stdout.flush()
