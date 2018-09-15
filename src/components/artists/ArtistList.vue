@@ -4,6 +4,13 @@
             <v-card>
               <v-responsive style="max-height:150px;">
                   <img
+                    v-if="artist.photo"
+                    style="width:100%"
+                    :src="getUrlFoto(artist.id)"
+                    />
+
+                  <img
+                    v-else
                     style="width:100%"
                     src="@/assets/noartist.jpeg"
                     />
@@ -34,6 +41,7 @@
 
 <script>
 import { getTrackUrl } from '@/utils'
+import config from '@/config'
 import api from '@/services/api'
 import player from '@/services/player'
 
@@ -115,7 +123,9 @@ export default {
             });
         },
 
-       
+        getUrlFoto: function(id) {
+            return `${config.files}/artist-photo/${id}`;
+        }      
     }
 
 }
