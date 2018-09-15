@@ -39,19 +39,31 @@ router.get('/tracks/download', function(req, res) {
   });
 });
 
+function getFileStats(path) {
+  return new Promise(function(resolve, reject) {
+    fs.stat(path, function(e, stats) {
+      if (e) reject(e);
+      else resolve(stats)
+    })
+  })
+}
+
 router.get('/tracks/:id', function(req, res) {
   db.Track.findOne({ where: { id: req.params.id } })
     .then(track => {
-      res.sendFile(track.uri)
-      /* fs.createReadStream(track.uri)
-      .on('end', function () {
-          console.log('Track streaming done!');
+
+      getFileStats(track.uri)
+      .then(stat => {
+        res.writeHead(200, {
+          'Content-Type': 'audio/mp3',
+          'Content-Length': stat.size
+        });
+    
+        const stream = fs.createReadStream(track.uri);
+    
+        stream.on('end', () => console.log('Streaming finished!'));
+        stream.pipe(res);
       })
-      .on("error", function (err) {
-          console.error(err);
-          res.end(err);
-      })
-      .pipe(res, { end: true }); */
     })
     .catch(error => {
       console.log(error);
