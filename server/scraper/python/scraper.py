@@ -26,7 +26,7 @@ def download(url, dest):
     r = requests.get(url, stream=True)
     if r.status_code == 200:
         try:
-            with open(dest, 'wb') as f:
+            with open(dest, 'w+b') as f:
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, f)
         except Exception as e:
@@ -51,7 +51,7 @@ def downloadArtLastFM(artist, album):
                 url_imagen = img_imagen.get('src')
                 file_dir = os.path.dirname(os.path.realpath('__file__'))
                 file_name = album + '.jpg'
-                file_path = os.path.join(file_dir, 'files/album-art/' + file_name)
+                file_path = os.path.join(file_dir, 'server/files/album-art/' + file_name)
                 download(url_imagen, file_path)
                 return True
     except Exception:
@@ -100,9 +100,6 @@ def scan(db_path, folder_path, search_art):
             sys.stdout.flush()
             return id_inserted
         else:
-            if (not check[1] and search_art):
-                art = downloadArtLastFM(artist['name'], album['name'])
-                cursor.execute('UPDATE album SET art=? WHERE id=?', (art, check[0],))
             return check[0]
 
     def saveArtist(artist):

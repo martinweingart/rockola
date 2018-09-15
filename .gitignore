@@ -24,3 +24,5 @@ src/config.js
 
 server/config.js
 server/db/db.sqlite
+server/db/db.sqlite-journal
+server/files/album-art
