@@ -28,7 +28,11 @@ router.get('/', function(req, res) {
           db.sequelize.where(db.sequelize.col('artist.name'), 'like', `%${req.query.q}%`)
         ]
       }
-    }    
+    }
+    
+    if (req.query.album) {
+      req.sql.where = db.sequelize.where(db.sequelize.col('album.id'), '=', req.query.album)
+    }
   
     db.Track.findAll(req.sql)
     .then(tracks => return_types.ok(res, tracks))

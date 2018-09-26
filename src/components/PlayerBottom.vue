@@ -1,6 +1,6 @@
 <template>
 <v-container class="pa-0">
-    <v-layout row style="background: #ECEFF1;" :wrap="$options.isMobile()">
+    <v-layout style="background: #ECEFF1;" :wrap="$options.isMobile()">
         <v-btn icon small @click="$emit('openQueue')" title="Open Queue">
             <v-icon>open_in_browser</v-icon>
         </v-btn>

@@ -1,8 +1,27 @@
 <template>
     <v-layout row wrap ref="container">
+        <v-dialog v-model="show_tracks" scrollable width="90%">
+            <v-card>
+                <v-card-title class="black white--text">
+                    Artist Tracks
+                    <v-divider></v-divider>
+                    <v-btn icon dark @click.native="show_tracks = false">
+                        <v-icon>close</v-icon>
+                    </v-btn>
+                </v-card-title>
+                <v-card-text>
+                    <artist-tracks :artist="selected"></artist-tracks>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
+
+
         <v-flex md2 xs4  v-for="artist of artists" :key="artist.id" class="ma-3">
             <v-card>
-              <v-responsive style="max-height:150px;">
+              <v-responsive
+                @click="openTracks(artist.id)"
+                style="max-height:150px;cursor:pointer"
+            >
                   <img
                     v-if="artist.photo"
                     style="width:100%"
@@ -44,18 +63,25 @@ import { getTrackUrl } from '@/utils'
 import config from '@/config'
 import api from '@/services/api'
 import player from '@/services/player'
+import ArtistTracks from '@/components/artists/ArtistTracks'
 
 export default {
     name: 'ArtistList',
 
     props: {
         filter: String
-    },    
+    },
+
+    components: {
+        ArtistTracks
+    },
 
     data() {
         return {
             artists: [],
-            offset: 0
+            offset: 0,
+            show_tracks: false,
+            selected: null
         }
     },
 
@@ -64,7 +90,7 @@ export default {
             this.offset = 0;
             this.update();
         }
-    },    
+    },
 
     created: function() {
         this.update();
@@ -125,7 +151,14 @@ export default {
 
         getUrlFoto: function(id) {
             return `${config.files}/artist-photo/${id}`;
-        }      
+        },
+
+        openTracks: function(id) {
+            this.selected = id;
+            this.show_tracks = true;
+        }
+
+
     }
 
 }

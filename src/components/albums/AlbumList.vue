@@ -1,8 +1,26 @@
 <template>
     <v-layout row wrap ref="container">
+        <v-dialog v-model="show_tracks" scrollable width="90%">
+            <v-card>    
+                <v-card-title class="black white--text">
+                    Album Tracks
+                    <v-divider></v-divider>
+                    <v-btn icon dark @click.native="show_tracks = false">
+                        <v-icon>close</v-icon>
+                    </v-btn>
+                </v-card-title>            
+                <v-card-text>
+                    <album-tracks :album="album_selected"></album-tracks>                    
+                </v-card-text>
+            </v-card>
+        </v-dialog>
+
         <v-flex md2 xs4  v-for="album of albums" :key="album.id" class="ma-3">
             <v-card>
-              <v-responsive style="max-height:150px;">
+              <v-responsive 
+                style="max-height:150px;cursor:pointer"
+                @click="openAlbum(album.id)"
+              >
                   <img
                     v-if="album.art"
                     style="width:100%"
@@ -50,6 +68,7 @@ import config from '@/config'
 import { getTrackUrl, download } from '@/utils'
 import api from '@/services/api'
 import player from '@/services/player'
+import AlbumTracks from '@/components/albums/AlbumTracks'
 
 export default {
     name: 'AlbumList',
@@ -58,10 +77,16 @@ export default {
         filter: String
     },
 
+    components: {
+        AlbumTracks
+    },
+
     data() {
         return {
             albums: [],
-            offset: 0
+            offset: 0,
+            album_selected: null,
+            show_tracks: false
         }
     },
 
@@ -129,6 +154,11 @@ export default {
 
         getAlbumArt: function(id) {
             return `${config.files}/album-art/${id}`;
+        },
+
+        openAlbum: function(id) {
+            this.album_selected = id;
+            this.show_tracks = true;
         }
     }
 
@@ -136,5 +166,4 @@ export default {
 </script>
 
 <style>
-
 </style>
