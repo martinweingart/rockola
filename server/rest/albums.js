@@ -48,7 +48,8 @@ router.get('/:id', function(req, res) {
             attributes: [ 'name' ],
             as: 'artist'
           }]
-      }]
+      }],
+      order: [[{ model: db.Track, as: 'tracks' }, 'track', 'ASC']],
     })
     .then(album => {
       return_types.ok(res, album);
