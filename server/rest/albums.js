@@ -38,7 +38,16 @@ router.get('/:id', function(req, res) {
       where: { id: req.params.id },
       include: [{
           model: db.Track,
-          as: 'tracks'
+          as: 'tracks',
+          include: [{
+            model: db.Album,
+            attributes: [ 'name' ],
+            as: 'album'
+          }, {
+            model: db.Artist,
+            attributes: [ 'name' ],
+            as: 'artist'
+          }]
       }]
     })
     .then(album => {

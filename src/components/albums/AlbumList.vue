@@ -9,8 +9,8 @@
                         <v-icon>close</v-icon>
                     </v-btn>
                 </v-card-title>            
-                <v-card-text>
-                    <album-tracks :album="album_selected"></album-tracks>                    
+                <v-card-text class="pa-0 ma-0">
+                    <album-tracks :id="album_selected"></album-tracks>                    
                 </v-card-text>
             </v-card>
         </v-dialog>

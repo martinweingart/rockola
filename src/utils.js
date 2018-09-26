@@ -23,3 +23,7 @@ export function isMobile() {
     }
     return check;
 }
+
+export function getAlbumArt(id) {
+    return `${config.files}/album-art/${id}`;
+}

@@ -9,7 +9,7 @@
                         <v-icon>close</v-icon>
                     </v-btn>
                 </v-card-title>
-                <v-card-text>
+                <v-card-text class="pa-0 ma-0">
                     <artist-tracks :artist="selected"></artist-tracks>
                 </v-card-text>
             </v-card>
