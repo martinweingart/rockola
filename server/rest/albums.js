@@ -38,8 +38,18 @@ router.get('/:id', function(req, res) {
       where: { id: req.params.id },
       include: [{
           model: db.Track,
-          as: 'tracks'
-      }]
+          as: 'tracks',
+          include: [{
+            model: db.Album,
+            attributes: [ 'name' ],
+            as: 'album'
+          }, {
+            model: db.Artist,
+            attributes: [ 'name' ],
+            as: 'artist'
+          }]
+      }],
+      order: [[{ model: db.Track, as: 'tracks' }, 'track', 'ASC']],
     })
     .then(album => {
       return_types.ok(res, album);

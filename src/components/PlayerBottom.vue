@@ -1,6 +1,6 @@
 <template>
 <v-container class="pa-0">
-    <v-layout row style="background: #ECEFF1;" :wrap="$options.isMobile()">
+    <v-layout row style="background: #ECEFF1;">
         <v-btn icon small @click="$emit('openQueue')" title="Open Queue">
             <v-icon>open_in_browser</v-icon>
         </v-btn>
@@ -13,7 +13,7 @@
             ref="player"
             controls
             type="audio/mpeg"
-            :style="$options.isMobile() ? 'width:70%' : 'width:100%'"
+            style="width:100%"
         ></audio>
 
         <v-btn icon small @click="playNext" title="Play Next">
@@ -63,7 +63,7 @@
 
 <script>
 import config from '@/config'
-import { download, isMobile } from '@/utils'
+import { download } from '@/utils'
 import player from '@/services/player'
 
 export default {
@@ -78,9 +78,7 @@ export default {
             }
         }
     },
-
-    isMobile: isMobile,
-
+    
     mounted: function() {
         player.init(this.$refs.player);
     },
