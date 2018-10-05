@@ -3,6 +3,16 @@ const scraper = require('../scraper');
 
 const folder = process.argv[2];
 
+async function scanAll(folders) { 
+    try {
+        for(let f of folders) await scraper.scan(f);
+        return Promise.resolve();
+    }
+    catch(e) { 
+        return Promise.reject(e);
+    }
+};
+
 if (folder) {
     if (isNaN(parseInt(folder)) || config.folders[parseInt(folder)-1]) {
         scraper.scan(config.folders[parseInt(folder)-1])
@@ -18,7 +28,7 @@ if (folder) {
     else console.log('Carpeta especificada incorrectamente. Puede que no haya ingresado bien el número o no haya una carpeta para dicho número');
 }
 else {
-    Promise.all(config.folders.map(f => scraper.scan(f)))
+    scanAll(config.folders)
     .then(() => {
         console.log('Folders scaned!');
         process.exit();
